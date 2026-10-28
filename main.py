@@ -25,6 +25,7 @@ def get_books(category: str = "all"):
 
 #Request Body with Pydantic
 from pydantic import BaseModel
+from fastapi import status
 
 class Book(BaseModel):
     title:str
@@ -33,7 +34,7 @@ class Book(BaseModel):
 #Optional fields in Pydantic
     description:str | None
 
-@app.post("/books")
+@app.post("/books",status_code=status.HTTP_201_CREATED)
 def create_book(book:Book):
     return {
         "message":"Book added successfully",
@@ -49,3 +50,51 @@ class BookResponse(BaseModel):
 @app.post("/books/preview", response_model=BookResponse)
 def preview_book(book: Book):
     return book
+
+#put
+@app.put("/books/{book_id}")
+def update_book(book_id:int,book:Book):
+    return{
+        "message":"Book Replaced",
+        "book_id":book_id,
+        "book name":book
+    }
+
+#patch
+class BookUpdate(BaseModel):
+    title: str | None = None
+    author: str | None = None
+    price: float | None = None
+
+@app.patch("/books/{book_id}")
+def part_upd_book(book_id:int,book:BookUpdate):
+    changes=book.model_dump(exclude_unset=True)
+    return {
+        "message":"Book Replaced",
+        "book_id":book_id,
+        "changes":changes
+    }
+
+#Delete
+@app.delete("/books/{book_id}")
+def delete_book(book_id: int):
+    return {
+        "message": "Book deleted",
+        "book_id": book_id
+    }
+
+
+#Error handling with HTTPException
+from fastapi import HTTPException
+
+@app.get("/boooks/{book_id}")
+def get_boooks(book_id:int):
+    if book_id  !=1:
+        raise HTTPException(
+            status_code=404,
+            detail="book not found"
+        )
+    return{
+        "book_id":1,
+        "title":"Basic Python"
+    }
