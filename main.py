@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
 app= FastAPI()
 
@@ -110,3 +110,14 @@ app.include_router(bookrouter)
 @app.get("/")
 def home():
     return {"message": "Welcome to FastApi"}
+
+from users import router as userrouter
+from users import get_current_user
+
+app.include_router(userrouter)
+
+@app.get('/profile')
+def get_profile(user: dict=Depends(get_current_user)):
+    return {
+        "profile":user
+    }
