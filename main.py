@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
 
-app= FastAPI()
+# app= FastAPI()
 
 
 # @app.get("/")
@@ -124,15 +124,31 @@ app= FastAPI()
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-from middleware import log_request
+# from middleware import log_request
 
-app.middleware("http")(log_request)
+# app.middleware("http")(log_request)
+
+# @app.get("/")
+# def home():
+#     return{"messsge":"welcome to home"}
+
+
+# @app.get("/books")
+# def get_books():
+#     return {"books": ["Python", "Django"]}
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+from config import settings
+
+app=FastAPI(
+    title=settings.app_name,
+    debug=settings.debug
+)
 
 @app.get("/")
 def home():
-    return{"messsge":"welcome to home"}
-
-
-@app.get("/books")
-def get_books():
-    return {"books": ["Python", "Django"]}
+    return {
+        "app_name": settings.app_name,
+        "debug": settings.debug
+    }
