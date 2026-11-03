@@ -99,25 +99,40 @@ app= FastAPI()
 #         "title":"Basic Python"
 #     }
 
-
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
 # APIRouter and project structure
-from books import router as bookrouter
+# from books import router as bookrouter
 
-app.include_router(bookrouter)
+# app.include_router(bookrouter)
+
+# @app.get("/")
+# def home():
+#     return {"message": "Welcome to FastApi"}
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# from users import router as userrouter
+# from users import get_current_user
+
+# app.include_router(userrouter)
+
+# @app.get('/profile')
+# def get_profile(user: dict=Depends(get_current_user)):
+#     return {
+#         "profile":user
+#     }
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+from middleware import log_request
+
+app.middleware("http")(log_request)
 
 @app.get("/")
 def home():
-    return {"message": "Welcome to FastApi"}
+    return{"messsge":"welcome to home"}
 
-from users import router as userrouter
-from users import get_current_user
 
-app.include_router(userrouter)
-
-@app.get('/profile')
-def get_profile(user: dict=Depends(get_current_user)):
-    return {
-        "profile":user
-    }
+@app.get("/books")
+def get_books():
+    return {"books": ["Python", "Django"]}
